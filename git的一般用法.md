@@ -23,3 +23,8 @@ git clone  https://github.com/CKTim/BlueTooth.git
 #### 4、git commit  -m  "提交信息"  （注：“提交信息”里面换成你需要，如“first commit”）
 
 #### 5、git push -u origin master   （注：此操作目的是把本地仓库push到github上面，此步骤需要你输入帐号和密码）
+
+
+
+#### 强制push本地仓库到远程 (这种情况不会进行merge, 强制push后远程文件可能会丢失 不建议使用此方法) $ git push -u origin master -f
+
