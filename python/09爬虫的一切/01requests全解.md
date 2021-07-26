@@ -223,7 +223,7 @@ response = requests.get('http://192.168.199.107', auth = auth)
 print (response.text)
 ```
 
---- 
+---
 
 ## 六、Cookies 和 Sission
 
@@ -343,11 +343,11 @@ print (response.text)
 ## 七、保存图片
 
 ```py
-response = requests.get('xxxx.jpg')
+response = requests.get(url)
 
-with opne('a.png','wb') as f:
-    f.write(response.context)
-    f.close
+with open(name_num, 'wb') as f:
+f.write(response.content)
+f.close()
 ```
 
 ---

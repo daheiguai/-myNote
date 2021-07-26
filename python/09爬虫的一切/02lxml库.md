@@ -7,7 +7,7 @@
 1. 导入lxml 的 etree 库 (导入没有提示不代表不能用)
 
 ```python
- `from lxml import etree`
+from lxml import etree
 ```
 
 2. 利用etree.HTML，将字符串转化为Element对象,Element对象具有xpath的方法,返回结果的列表，能够接受bytes类型的数据和str类型的数据
