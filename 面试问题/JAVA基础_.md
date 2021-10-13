@@ -126,7 +126,106 @@ jdk7是数组+链表  jdk8是数组+链表+红黑树
 - 加载因子loadfactor
   - 初始化为0.75
 
-add流程   扩容
+源码-变量
+
+```java
+//初始化数组容量
+static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
+//数组最大容量
+static final int MAXIMUM_CAPACITY = 1 << 30;
+//加载因子
+ static final float DEFAULT_LOAD_FACTOR = 0.75f;
+//树化阈值
+static final int TREEIFY_THRESHOLD = 8;
+//树降级成为链表的阈值
+static final int UNTREEIFY_THRESHOLD = 6;
+//最小树化数组容量
+static final int MIN_TREEIFY_CAPACITY = 64;
+
+//数组
+transient Node<K,V>[] table;
+transient Set<Map.Entry<K,V>> entrySet;
+transient int size;
+//操作数，put或get操作会使其+1
+transient int modCount;
+// = capacity * loadFactor
+int threshold;
+//负载因子
+final float loadFactor;
+```
+
+构造方法
+
+```java
+//无参构造
+public HashMap() {this.loadFactor = DEFAULT_LOAD_FACTOR;}
+//自己初始大小
+public HashMap(int initialCapacity) {
+    this(initialCapacity, DEFAULT_LOAD_FACTOR);
+}
+//自己设置初始大小和加载因子
+public HashMap(int initialCapacity, float loadFactor) {
+    if (initialCapacity < 0)
+        throw new IllegalArgumentException("Illegal initial capacity: 											" +initialCapacity);
+    if (initialCapacity > MAXIMUM_CAPACITY)
+        initialCapacity = MAXIMUM_CAPACITY;
+    if (loadFactor <= 0 || Float.isNaN(loadFactor))
+        throw new IllegalArgumentException("Illegal load factor: " +
+                                           loadFactor);
+    this.loadFactor = loadFactor;
+    this.threshold = tableSizeFor(initialCapacity);
+}
+
+//给一个map构造
+public HashMap(Map<? extends K, ? extends V> m) {
+    this.loadFactor = DEFAULT_LOAD_FACTOR;
+    putMapEntries(m, false);
+}
+```
+
+构造方法补充函数-指定大小如何变成刚刚好比其大的2N
+
+```java
+/**
+这个函数吧输入的 变成 2.N次方
+刚刚好比这个数大的 2.N次方
+与运算 、 右移
+*/
+static final int tableSizeFor(int cap) {
+    int n = cap - 1;
+    n |= n >>> 1;
+    n |= n >>> 2;
+    n |= n >>> 4;
+    n |= n >>> 8;
+    n |= n >>> 16;
+    return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : 																n + 1;
+}
+```
+
+put方法
+
+```java
+//第一个put套娃开始
+public V put(K key, V value) {
+    return putVal(hash(key), key, value, false, true);}
+//put用到的hash方法
+//1.null放在数组的0号位置
+//2.作用：让高16位也参与路由运算，减少hash冲突概率（hashcode方法得到16位二进制）
+static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+```
+
+>
+>
+> 当元素只是孤家寡人即元素的next==null(源码)711时，位置为e.hash & (newCap - 1)（源码712）
+>7.2 当元素有next节点时，该链表上的元素分两类
+>7.21 e.hash & oldCap = 0的，在新表中与旧表中的位置一样(源码738）
+>
+>7.22 e.hash & oldCap != 0的，位置为旧表位置+旧表容量，源码742
+
+put流程   扩容
 
 - 初始化table  null
 
@@ -166,7 +265,13 @@ add流程   扩容
 
   - ![](img/hashmap_index2.jpg)
 
-红黑树结构详解
+### 红黑树
+
+一些相关定义的图片
+
+![](img/RBT.png)
+
+![](img/RBT2.png)
 
 ### ConcurrentHashMap
 
@@ -251,6 +356,8 @@ hashCode 的常规协定是：
 说明简洁版
 
 ```
+用equal方法判断对象是否相等
+
 1、如果两个对象相等，则 hashCode 一定也是相同的；
 
 2、两个对象相等，对两个对象分别调用 equals 方法都返回 true；
@@ -260,6 +367,8 @@ hashCode 的常规协定是：
 4、因此，equals 方法被覆盖过，则 hashCode 方法也必须被覆盖；
 
 5、hashCode() 的默认行为是对堆上的对象产生独特值。如果没有重写 hashCode()，则该 class 的两个对象无论如何都不会相等（即使这两个对象指向相同的数据）。
+
+重写了equals方法，判断相等的条件变了，有概率相等的对象hashcode会不相同。拿hashmap举例，插入{"1","test1"}和{"1","test2"}，test2不一定会覆盖test1，因为算出了2个hashcode，是错误的。
 ```
 
 - hashCode是用于查找使用的，而equals是用于比较两个对象的是否相等的
@@ -270,7 +379,7 @@ hashCode 的常规协定是：
 
 # 反射
 
-反射的三种实现方式
+## 反射三种实现
 
 - Foo foo = new Foo();
 
@@ -294,11 +403,83 @@ hashCode 的常规协定是：
   Object o = clazz.newInstance();　
   ```
 
-  
+## 动态代理
+
+### JDK动态代理
+
+特性
+
+- 基于接口的动态代理，被代理的类必须实现一个接口。代理方法由JDK提供
+
+### CGLIB动态代理
+
+特性
+
+- 继承
 
 # 序列化
 
 # 泛型
+
+## 概念
+
+Java泛型（generics）是JDK5中引入的一个新特性，泛型提供了编译时类型安全监测机制，该机制允许我们在编译时检测到非法的类型数据结构。泛型的本质就是参数化类型，也就是所操作的数据类型被指定为一个参数。
+
+## 作用
+
+- 类型安全
+- 消除了强制类型的转换
+
+一个被举了无数次的例子：
+
+```java
+List arrayList = new ArrayList();
+arrayList.add("aaaa");
+arrayList.add(100);
+
+for(int i = 0; i< arrayList.size();i++){
+    String item = (String)arrayList.get(i);
+    Log.d("泛型测试","item = " + item);
+}
+```
+
+毫无疑问，程序的运行结果会以崩溃结束：
+
+```java
+java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String
+```
+
+ArrayList可以存放任意类型，例子中添加了一个String类型，添加了一个Integer类型，再使用时都以String的方式使用，因此程序崩溃了。为了解决类似这样的问题（在编译阶段就可以解决），泛型应运而生。
+
+## 特性
+
+### 泛型类
+
+- 类型：
+
+  > E - Element (在集合中使用，因为集合中存放的是元素)
+  > T - Type（表示Java 类，包括基本的类和我们自定义的类）
+  > K - Key（表示键，比如Map中的key）
+  > V - Value（表示值）
+  > N - Number（表示数值类型）
+  > ？ - （表示不确定的java类型）
+  > S、U、V - 2nd、3rd、4th types
+
+### 泛型接口
+
+### 类型通配符
+
+.什么是类型通配符
+类型通配符一般是使用"?"代替具体的类型实参。
+所以，类型通配符是类型实参，而不是类型形参。
+2.类型通配符的上限
+语法：
+类/接口<? extends 实参类型>
+要求该泛型的类型，只能是实参类型，或实参类型的子类类型。
+3.类型通配符的下限
+语法：
+类/接口<? super 实参类型>
+要求该泛型的类型，只能是实参类型，或实参类型的父类类型。
 
 # CAS
 
@@ -365,7 +546,7 @@ CAS：Compare and Swap，即比较再交换。
 
 - 底层硬件通过将 CAS 里的多个操作在硬件层面语义实现上，通过一条处理器指令保证了原子性操
 
-# 乐观锁悲观锁JAVA实现
+# 乐观锁悲观锁实现
 
 - 
 
