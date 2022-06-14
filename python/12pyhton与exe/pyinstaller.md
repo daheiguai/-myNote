@@ -18,7 +18,7 @@ cmd:  pyinstaller -w -F main.py   -F没有任何目录结构 全部打包成ex
 打包exe后找不到第三方库
 
 ```
-pyinstaller example.py -F -p C:/python/lib/site-packages
+pyinstaller example.py -w -F -p C:/python/lib/site-packages
 ```
 
 ## 参数大全

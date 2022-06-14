@@ -1,10 +1,77 @@
-# 最基本的操作
+
 
 ---
 
-## 一、更新
+# 配置源
 
-更新源
+## yum源与更新
+
+1. 进入yum源目录
+   ```
+   cd /etc/yum.repos.d
+   ```
+
+  ls查看当前yum源目录里的文件：
+
+2. 将“CentOS-Base.repo”重命名备份为“CentOS-Base.repo.old”
+   ```
+   mv CentOS-Base.repo CentOS-Base.repo.old
+   ```
+
+3. 从阿里云下载yum源
+   ```
+   wget http://mirrors.aliyun.com/repo/Centos-7.repo
+   ```
+
+4. 将新的源改名为“CentOS-Base.repo”
+   ```
+   mv Centos-7.repo CentOS-Base.repo
+   ```
+
+5. 让yum重新缓存新的数据
+   ```
+   yum clean all
+   yum makecache
+   yum update -y
+   ```
+
+## Centos7安装常用的东西
+
+### 安装nodejs
+
+1. 如果此步骤完成后，node -v 和 npm -v都有了，则安装成功
+
+   ```
+   yum install -y nodejs
+   ```
+
+2. 如果只有node -v :
+
+   ```
+   yum install -y npm
+   ```
+
+3. 安装cnpm（如有需要）
+
+   ```
+   npm install cnpm -g --registry=https://registry.npm.taobao.org
+   ```
+
+### 安装git
+
+```
+yum -y install git
+```
+
+### 安装并运行redis
+
+```
+yum -y install redis && redis-server --daemonize yes
+```
+
+
+
+## Ubuntu源更新
 
     apt-get update
     
@@ -12,7 +79,7 @@
 
 ---
 
-## 二、sudo
+# sudo
 
 #### 1.语句前加上sudo 就是以管理员身份执行
 
@@ -44,7 +111,7 @@
 
 ---
 
-## 三、基本文件夹操作
+# 基本文件夹操作
 
 #### 显示当前目录下所有文件
 
@@ -62,7 +129,7 @@
 
 ---
 
-## 四、文件创建删除
+# 文件创建删除
 
 #### 创建文件夹
 
@@ -95,13 +162,13 @@ rm -rf MyDocuments/
 
 
 <<<<<<< HEAD
-## 五、移动复制
+# 移动复制
 
 
 
 =======
 >>>>>>> 4c1daf1517bc0b775688e358fe8f0767efb10fcb
-## vim 基本操作
+# vim 基本操作
 
 #### 打开文件
 
@@ -121,7 +188,7 @@ rm -rf MyDocuments/
 
 然后按下  "  : "冒号 出现输入框 输入wq保存并退出  输入q！退出不保存
 
-## 六、命令行输出后台进行到日志
+# 命令行输出后台进行到日志
 
 
 
@@ -160,3 +227,10 @@ ps -ef | grep python
 ```
 
 停止进程 kill -9 [进程id]
+
+# SSR脚本
+
+```
+wget -N --no-check-certificate https://raw.githubusercontent.com/ToyoDAdoubi/doubi/master/ssr.sh && chmod +x ssr.sh && bash ssr.sh
+```
+
