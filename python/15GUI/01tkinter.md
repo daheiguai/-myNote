@@ -430,3 +430,143 @@ if __name__ == '__main__':
 
 
 
+# 窗口
+
+## Frame
+
+### 常用
+
+```python
+import tkinter as tk
+
+if __name__ == '__main__':
+    window = tk.Tk()
+    window.title("窗口标题")
+    window.geometry('400x300')
+
+    frame = tk.Frame(window)
+    frame.pack()
+
+    frame_left = tk.Frame(frame)
+    frame_left.pack(side='left')
+    frame_right = tk.Frame(frame)
+    frame_right.pack(side='right')
+
+    tk.Label(frame_left,text='我在左边fram').pack()
+    tk.Label(frame_right,text='我在右边fram').pack()
+    tk.Label(frame_left,text='我在左边fram').pack()
+
+    window.mainloop()
+```
+
+## messagebox
+
+### 常用
+
+```python
+import tkinter as tk
+from tkinter import messagebox
+
+def make_me():
+    # messagebox.showinfo(title='消息弹窗',message='hello')
+    # messagebox.showwarning(title='警告弹窗',message='hello')
+    # messagebox.showerror(title='错误弹窗',message='hello')
+
+    # return yes no字符串    蓝色问号图标  是/否 按钮
+    # chose = messagebox.askquestion(title='询问弹窗',message='hello')
+    # return True False bool   蓝色问号图标 是/否 按钮
+    # chose = messagebox.askyesno(title='询问弹窗',message='hello')
+    # return True False bool  黄色感叹号图标  重试/取消 按钮
+    # chose = messagebox.askretrycancel(title='询问弹窗',message='hello')
+    # return True False bool   蓝色问号图标 确定/取消 按钮
+    # chose = messagebox.askokcancel(title='询问弹窗',message='hello')
+    # return True False Node bool   蓝色问号图标 是/否/取消 按钮
+    chose = messagebox.askyesnocancel(title='询问弹窗',message='hello')
+
+    print(chose)
+
+if __name__ == '__main__':
+    window = tk.Tk()
+    window.title("窗口标题")
+    window.geometry('400x300')
+
+    button = tk.Button(window, command=make_me, text='make me')
+    button.pack()
+
+    window.mainloop()
+```
+
+# 布局样式
+
+## 注意
+
+一个程序最好只使用一种布局方式，否则会出现乱七芭蕉的事情
+
+## pack
+
+- 放置
+
+### 常用
+
+在上下左右各个地方放置元素
+
+```python
+import tkinter as tk
+
+if __name__ == '__main__':
+    window = tk.Tk()
+    window.title("窗口标题")
+    window.geometry('400x300')
+
+    tk.Label(window,text=1).pack(side='top')
+    tk.Label(window,text=1).pack(side='bottom')
+    tk.Label(window,text=1).pack(side='left')
+    tk.Label(window,text=1).pack(side='right')
+
+    window.mainloop()
+    window.mainloop()
+```
+
+## place
+
+- 绝对布局
+
+### 注意
+
+- 不管是x，y还是relx，rely，位置都跟【父元素无关】，是整个window的绝对位置
+- 覆盖关系：新place的元素必定在最上边
+
+### 常用
+
+```python
+import tkinter as tk
+
+if __name__ == '__main__':
+    window = tk.Tk()
+    window.title("窗口标题")
+    window.geometry('400x300')
+
+    tk.Label(window,text=1).place(x=10,y=100,  #坐标位置
+                                  anchor='nw')  #铆钉点
+    tk.Label(frame2, text=2).place(relx=0.1, rely=0)   #百分比位置，只能用0-1的值
+
+    window.mainloop()
+```
+
+### 铆钉点
+
+锚点常用代码如图
+
+![](img/锚点.png)
+
+## grid
+
+- 网格布局
+
+### 常用
+
+不经常用，用到的时候再写，我估计这辈子我都用不上
+
+```python
+```
+
