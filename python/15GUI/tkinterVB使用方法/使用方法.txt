@@ -1,0 +1,7 @@
+1.安装VB6迷你版
+
+2.github 下载  https://github.com/cdhigh/tkinter-designer /或者用已得到的这个版本
+
+3. 把开源插件解压到任意目录
+
+3.  点击 bin/Setup for...exe  选择注册就行了 
