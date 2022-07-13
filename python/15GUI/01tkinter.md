@@ -496,6 +496,19 @@ if __name__ == '__main__':
     window.mainloop()
 ```
 
+## filedialog
+
+### 常用
+
+```python
+from tkinter import filedialog
+
+Folderpath = filedialog.askdirectory() #获得选择好的文件夹
+Filepath = filedialog.askopenfilename() #获得选择好的文件
+```
+
+
+
 # 布局样式
 
 ## 注意
@@ -549,6 +562,7 @@ if __name__ == '__main__':
     tk.Label(window,text=1).place(x=10,y=100,  #坐标位置
                                   anchor='nw')  #铆钉点
     tk.Label(frame2, text=2).place(relx=0.1, rely=0)   #百分比位置，只能用0-1的值
+    (relwidth=0.205, relheight=0.041)#百分比宽度和高度
 
     window.mainloop()
 ```
